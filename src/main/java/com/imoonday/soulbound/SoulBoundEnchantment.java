@@ -6,8 +6,6 @@ import dev.emi.trinkets.api.TrinketEnums;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.command.argument.ItemStackArgument;
-import net.minecraft.command.argument.ItemStringReader;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentTarget;
@@ -15,6 +13,7 @@ import net.minecraft.enchantment.VanishingCurseEnchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.registry.Registries;
@@ -110,7 +109,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 }
             }
             Item item = Registries.ITEM.get(identifier);
-            if (item != null) {
+            if (item != Items.AIR) {
                 ItemStack itemStack = new ItemStack(item);
                 if (nbt != null) {
                     itemStack.setNbt(nbt);
