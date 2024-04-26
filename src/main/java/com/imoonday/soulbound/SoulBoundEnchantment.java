@@ -1,5 +1,7 @@
 package com.imoonday.soulbound;
 
+import com.beansgalaxy.backpacks.data.BackData;
+import com.beansgalaxy.backpacks.platform.ForgeCompatHelper;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tiviacz.travelersbackpack.capability.CapabilityUtils;
 import com.tiviacz.travelersbackpack.capability.ITravelersBackpack;
@@ -31,6 +33,7 @@ public class SoulBoundEnchantment extends Enchantment {
     public static final String IGNORED_NBT = "*";
     private static boolean curios = ModList.get().isLoaded("curios");
     private static boolean travelersBackpack = ModList.get().isLoaded("travelersbackpack");
+    private static boolean beansBackpacks = ModList.get().isLoaded("beansbackpacks");
 
     protected SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentCategory.BREAKABLE, EquipmentSlot.values());
@@ -182,6 +185,14 @@ public class SoulBoundEnchantment extends Enchantment {
                     }
                 }
             }
+
+            if (beansBackpacks) {
+                BackData backData = BackData.get(oldPlayer);
+                ItemStack stack = backData.getStack();
+                if (EnchantmentHelper.getTagEnchantmentLevel(Soulbound.SOUL_BOUND_ENCHANTMENT.get(), stack) > 0) {
+                    backData.copyTo(BackData.get(newPlayer));
+                }
+            }
         }
     }
 
@@ -209,6 +220,21 @@ public class SoulBoundEnchantment extends Enchantment {
                         }
                         return false;
                     }, ICurio.DropRule.ALWAYS_KEEP);
+                }
+            });
+        }
+    }
+
+    public static void registerBeansBackpacksDropCallback() {
+        if (beansBackpacks) {
+            MinecraftForge.EVENT_BUS.addListener(event -> {
+                if (event instanceof ForgeCompatHelper.OnDeath deathEvent) {
+                    if (deathEvent.getEntity() instanceof ServerPlayer) {
+                        ItemStack stack = deathEvent.getBackStack();
+                        if (EnchantmentHelper.getTagEnchantmentLevel(Soulbound.SOUL_BOUND_ENCHANTMENT.get(), stack) > 0) {
+                            deathEvent.setCanceled(true);
+                        }
+                    }
                 }
             });
         }
