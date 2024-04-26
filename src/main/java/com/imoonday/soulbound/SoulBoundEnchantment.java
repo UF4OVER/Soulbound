@@ -1,5 +1,7 @@
 package com.imoonday.soulbound;
 
+import com.beansgalaxy.backpacks.data.BackData;
+import com.beansgalaxy.backpacks.platform.FabricCompatHelper;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import dev.emi.trinkets.api.TrinketEnums;
@@ -19,6 +21,7 @@ import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
 
 import java.util.List;
@@ -28,6 +31,7 @@ public class SoulBoundEnchantment extends Enchantment {
     public static final String IGNORED_NBT = "*";
     private static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
     private static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
+    private static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
 
     public SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentTarget.BREAKABLE, EquipmentSlot.values());
@@ -132,9 +136,9 @@ public class SoulBoundEnchantment extends Enchantment {
                 ItemStack newStack = newPlayer.getInventory().getStack(i);
                 int level = EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, oldStack);
                 if (level > 0 && !ItemStack.areEqual(oldStack, newStack)) {
-                    if (getConfig().maxDamagePercent != 0 && !oldPlayer.isCreative() && oldStack.isDamageable()) {
-                        oldStack.damage(oldPlayer.getRandom().nextInt(oldStack.getMaxDamage() * getConfig().maxDamagePercent / 100), oldPlayer.getRandom(), oldPlayer);
-                        if (oldStack.getDamage() >= oldStack.getMaxDamage()) {
+                    if (shouldDamage(oldPlayer, oldStack)) {
+                        damageRandomly(oldPlayer, oldStack);
+                        if (isBroken(oldStack)) {
                             if (getConfig().allowBreakItem) {
                                 continue;
                             } else {
@@ -165,6 +169,14 @@ public class SoulBoundEnchantment extends Enchantment {
                     }
                 }
             }
+
+            if (beansBackpacks) {
+                BackData backData = BackData.get(oldPlayer);
+                ItemStack stack = backData.getStack();
+                if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
+                    backData.copyTo(BackData.get(newPlayer));
+                }
+            }
         }
     }
 
@@ -175,9 +187,9 @@ public class SoulBoundEnchantment extends Enchantment {
                     return rule;
                 }
                 if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
-                    if (getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable()) {
-                        stack.damage(player.getRandom().nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), player.getRandom(), player);
-                        if (stack.getDamage() >= stack.getMaxDamage()) {
+                    if (shouldDamage(player, stack)) {
+                        damageRandomly(player, stack);
+                        if (isBroken(stack)) {
                             if (getConfig().allowBreakItem) {
                                 return TrinketEnums.DropRule.DESTROY;
                             } else {
@@ -190,6 +202,32 @@ public class SoulBoundEnchantment extends Enchantment {
                 return rule;
             });
         }
+    }
+
+    public static void registerBeansBackpacksDropCallback() {
+        if (beansBackpacks) {
+            FabricCompatHelper.OnDeathCallback.EVENT.register(context -> {
+                if (context.getPlayer() instanceof ServerPlayerEntity) {
+                    ItemStack stack = context.getBackStack();
+                    if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
+                        context.cancel();
+                    }
+                }
+            });
+        }
+    }
+
+    private static boolean isBroken(ItemStack stack) {
+        return stack.getDamage() >= stack.getMaxDamage();
+    }
+
+    private static boolean shouldDamage(ServerPlayerEntity player, ItemStack stack) {
+        return getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable();
+    }
+
+    private static void damageRandomly(ServerPlayerEntity player, ItemStack stack) {
+        Random random = player.getRandom();
+        stack.damage(random.nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), random, player);
     }
 
     private static ModConfig getConfig() {

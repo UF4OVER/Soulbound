@@ -33,6 +33,16 @@ repositories {
             includeGroup "maven.modrinth"
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                url "https://cursemaven.com"
+            }
+        }
+        filter {
+            includeGroup "curse.maven"
+        }
+    }
 }
 
 dependencies {
@@ -41,7 +51,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-        // Fabric API. This is technically optional, but you probably want it anyway.
+    // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:11.1.106") {
@@ -54,7 +64,8 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.0"
     modImplementation "maven.modrinth:travelersbackpack:C78BanYS"
-    }
+    modImplementation "curse.maven:beans-backpacks-946775:5264276"
+}
 
 processResources {
     inputs.property "version", project.version
@@ -95,7 +106,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.archivesBaseName}"}
+        rename { "${it}_${project.archivesBaseName}" }
     }
 }
 
