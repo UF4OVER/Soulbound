@@ -2,11 +2,9 @@
   "required": true,
   "minVersion": "0.8",
   "package": "com.imoonday.soulbound.mixin",
-  "compatibilityLevel": "JAVA_17",
+  "compatibilityLevel": "JAVA_21",
   "mixins": [
     "BackpackUtilsMixin",
-    "EnchantmentHelperMixin",
-    "LivingEntityDeathMixin",
     "PlayerInventoryMixin"
   ],
   "injectors": {

@@ -23,11 +23,14 @@ public class ModConfig implements ConfigData {
     @ConfigEntry.BoundedDiscrete(max = 100)
     public int maxDamagePercent = 20;
 
+    @ConfigEntry.BoundedDiscrete(min = 1, max = 10)
+    public int weight = 2;
+
     @ConfigEntry.BoundedDiscrete(max = 100)
     public int minPower = 25;
 
     @ConfigEntry.BoundedDiscrete(min = 1, max = 100)
-    public int powerRange = 50;
+    public int maxPower = 75;
 
     public CompatibilityMode compatibilityMode = CompatibilityMode.DEFAULT;
 

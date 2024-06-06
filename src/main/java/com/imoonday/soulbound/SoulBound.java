@@ -11,11 +11,12 @@ import net.minecraft.util.Identifier;
 
 public class SoulBound implements ModInitializer {
 
-    public static final Enchantment SOUL_BOUND = Registry.register(Registries.ENCHANTMENT, new Identifier("soulbound", "soulbound"), new SoulBoundEnchantment());
+    public static Enchantment SOUL_BOUND;
 
     @Override
     public void onInitialize() {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
+        SOUL_BOUND = Registry.register(Registries.ENCHANTMENT, new Identifier("soulbound", "soulbound"), new SoulBoundEnchantment());
         ServerPlayerEvents.COPY_FROM.register(SoulBoundEnchantment::copySoulBoundItems);
         SoulBoundEnchantment.registerTrinketDropCallback();
     }

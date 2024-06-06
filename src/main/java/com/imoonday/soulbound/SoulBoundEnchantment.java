@@ -1,23 +1,18 @@
 package com.imoonday.soulbound;
 
-import com.beansgalaxy.backpacks.core.BackData;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import dev.emi.trinkets.api.TrinketEnums;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
 import me.shedaniel.autoconfig.AutoConfig;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.enchantment.EnchantmentTarget;
 import net.minecraft.enchantment.VanishingCurseEnchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.nbt.NbtCompound;
-import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.tag.ItemTags;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
 import net.minecraft.util.math.random.Random;
@@ -28,26 +23,11 @@ import java.util.List;
 public class SoulBoundEnchantment extends Enchantment {
 
     public static final String IGNORED_NBT = "*";
-    public static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
-    public static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
-    public static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
+    private static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
+//    private static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
 
     public SoulBoundEnchantment() {
-        super(Rarity.RARE, EnchantmentTarget.BREAKABLE, EquipmentSlot.values());
-    }
-
-    @Override
-    public int getMinPower(int level) {
-        return getConfig().minPower;
-    }
-
-    @Override
-    public int getMaxPower(int level) {
-        int powerRange = getConfig().powerRange;
-        if (powerRange < 0) {
-            powerRange = 50;
-        }
-        return this.getMinPower(level) + powerRange;
+        super(Enchantment.properties(ItemTags.DURABILITY_ENCHANTABLE, getConfig().weight, 1, Enchantment.constantCost(getConfig().minPower), Enchantment.constantCost(getConfig().maxPower), 4, EquipmentSlot.values()));
     }
 
     public boolean isTreasure() {
@@ -103,21 +83,21 @@ public class SoulBoundEnchantment extends Enchantment {
             if (identifier == null) {
                 return false;
             }
-            NbtCompound nbt = null;
-            if (split.length > 1) {
-                try {
-                    nbt = StringNbtReader.parse("{" + split[1]);
-                } catch (CommandSyntaxException ignored) {
-
-                }
-            }
+//            NbtCompound nbt = null;
+//            if (split.length > 1) {
+//                try {
+//                    nbt = StringNbtReader.parse("{" + split[1]);
+//                } catch (CommandSyntaxException ignored) {
+//
+//                }
+//            }
             Item item = Registries.ITEM.get(identifier);
             if (item != Items.AIR) {
                 ItemStack itemStack = new ItemStack(item);
-                if (nbt != null) {
-                    itemStack.setNbt(nbt);
-                }
-                return ItemStack.canCombine(itemStack, stack);
+//                if (nbt != null) {
+//                    itemStack.applyComponentsFrom(nbt);
+//                }
+                return ItemStack.areItemsEqual(itemStack, stack);
             }
         }
         return false;
@@ -176,14 +156,6 @@ public class SoulBoundEnchantment extends Enchantment {
                     }
                 }
             }
-
-            if (beansBackpacks) {
-                BackData backData = BackData.get(oldPlayer);
-                ItemStack stack = backData.getStack();
-                if (hasSoulbound(stack)) {
-                    backData.copyTo(BackData.get(newPlayer));
-                }
-            }
         }
     }
 
@@ -219,9 +191,13 @@ public class SoulBoundEnchantment extends Enchantment {
         return getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable();
     }
 
-    private static void damageRandomly(ServerPlayerEntity player, ItemStack stack) {
+    private static void damageRandomly(ItemStack stack, ServerPlayerEntity player) {
+        int maxDamage = stack.getMaxDamage();
+        int damageRange = maxDamage * getConfig().maxDamagePercent / 100;
+        if (damageRange <= 0) damageRange = maxDamage;
         Random random = player.getRandom();
-        stack.damage(random.nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), random, player);
+        stack.damage(random.nextInt(damageRange) + 1, random, player, () -> {
+        });
     }
 
     public static boolean hasSoulbound(ItemStack stack) {
