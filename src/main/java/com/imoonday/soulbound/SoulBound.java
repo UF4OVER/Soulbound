@@ -17,5 +17,6 @@ public class SoulBound implements ModInitializer {
         AutoConfig.register(ModConfig.class, GsonConfigSerializer::new);
         ServerPlayerEvents.COPY_FROM.register(SoulBoundEnchantment::copySoulBoundItems);
         SoulBoundEnchantment.registerTrinketDropCallback();
+        SoulBoundEnchantment.registerUniversalGravesItemAddedEvent();
     }
 }

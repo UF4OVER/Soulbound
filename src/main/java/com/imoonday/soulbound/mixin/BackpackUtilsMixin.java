@@ -10,14 +10,15 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(BackpackUtils.class)
 public class BackpackUtilsMixin {
 
-    @Inject(method = "onPlayerDeath", at = @At("HEAD"), cancellable = true)
-    private static void handleOnPlayerDeath(World world, PlayerEntity player, ItemStack stack, CallbackInfo ci) {
+    @Inject(method = "onPlayerDrops", at = @At("HEAD"), cancellable = true)
+    private static void handleOnPlayerDeath(World world, PlayerEntity player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
         if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
-            ci.cancel();
+            cir.setReturnValue(false);
         }
     }
 }
