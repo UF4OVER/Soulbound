@@ -14,7 +14,11 @@ public class ModConfig implements ConfigData {
 
     public boolean isTreasure = true;
 
+    public boolean allowEnchantedBookTrade = true;
+
     public boolean allowBreakItem = false;
+
+    public boolean disableSurvivalObtaining = false;
 
     @ConfigEntry.BoundedDiscrete(max = 100)
     public int maxDamagePercent = 20;
