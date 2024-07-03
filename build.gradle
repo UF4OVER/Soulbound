@@ -1,9 +1,9 @@
 plugins {
-    id 'fabric-loom' version '1.7-SNAPSHOT'
+    id 'fabric-loom' version '1.6-SNAPSHOT'
     id 'maven-publish'
 }
 
-version = project.mod_version
+version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
 repositories {
@@ -45,15 +45,18 @@ dependencies {
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
     modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
-        exclude(group: "net.fabricmc.fabric-api")
+        exclude(group: "net.fabricmc:fabric-api")
+        exclude(group: "net.fabricmc")
     }
 
-    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
-    modApi "maven.modrinth:trinkets:${project.trinkets_version}"
-    modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
-    modApi "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
-    modApi "maven.modrinth:travelersbackpack:${project.travelersbackpack_version}"
-    modApi "maven.modrinth:universal-graves:${project.universal_graves_version}"
+    modApi("com.terraformersmc:modmenu:${project.modmenu_version}") {
+        exclude(group: "net.fabricmc")
+    }
+
+    modImplementation("dev.emi:trinkets:${project.trinkets_version}")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}")
+    modImplementation("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}")
+    modImplementation("maven.modrinth:travelersbackpack:${project.travelersbackpack_version}")
 }
 
 processResources {
@@ -86,7 +89,7 @@ java {
     if (JavaVersion.current() < javaVersion) {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
-    archivesBaseName = project.archives_base_name
+    archivesBaseName = project.archives_base_name + "-" + project.platform
     // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
     // if it is present.
     // If you remove this line, sources will not be generated.

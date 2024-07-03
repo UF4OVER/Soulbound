@@ -12,6 +12,7 @@
   "text.autoconfig.soulbound.option.compatibilityMode.whitelistAndDefault": "Default + Whitelist",
   "text.autoconfig.soulbound.option.compatibilityMode.whitelistOnly": "Whitelist Only",
   "text.autoconfig.soulbound.option.conflictWithVanishingCurse": "Conflict with the Disappearance Curse",
+  "text.autoconfig.soulbound.option.disableSurvivalObtaining": "Disable obtaining in survival",
   "text.autoconfig.soulbound.option.isTreasure": "Treasure enchantment (i.e. the enchantment table cannot be swiped)",
   "text.autoconfig.soulbound.option.maxDamagePercent": "Max percentage of damage",
   "text.autoconfig.soulbound.option.minPower": "Min power",

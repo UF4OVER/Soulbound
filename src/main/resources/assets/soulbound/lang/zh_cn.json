@@ -12,6 +12,7 @@
   "text.autoconfig.soulbound.option.compatibilityMode.whitelistAndDefault": "默认+白名单",
   "text.autoconfig.soulbound.option.compatibilityMode.whitelistOnly": "仅白名单",
   "text.autoconfig.soulbound.option.conflictWithVanishingCurse": "与消失诅咒冲突",
+  "text.autoconfig.soulbound.option.disableSurvivalObtaining": "禁用生存模式获取途径",
   "text.autoconfig.soulbound.option.isTreasure": "宝藏附魔(即附魔台无法刷出)",
   "text.autoconfig.soulbound.option.maxDamagePercent": "最大损坏百分比",
   "text.autoconfig.soulbound.option.minPower": "最小权重",
