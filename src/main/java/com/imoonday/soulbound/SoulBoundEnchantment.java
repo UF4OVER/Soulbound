@@ -1,5 +1,6 @@
 package com.imoonday.soulbound;
 
+import com.beansgalaxy.backpacks.core.BackData;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import dev.emi.trinkets.api.TrinketEnums;
@@ -13,11 +14,13 @@ import net.minecraft.enchantment.VanishingCurseEnchantment;
 import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.nbt.NbtCompound;
 import net.minecraft.nbt.StringNbtReader;
 import net.minecraft.registry.Registries;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.math.random.Random;
 import net.minecraft.world.GameRules;
 
 import java.util.List;
@@ -25,8 +28,9 @@ import java.util.List;
 public class SoulBoundEnchantment extends Enchantment {
 
     public static final String IGNORED_NBT = "*";
-    private static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
-    private static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
+    public static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
+    public static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
+    public static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
 
     public SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentTarget.BREAKABLE, EquipmentSlot.values());
@@ -57,7 +61,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 return hasMatchItemStack(getConfig().whitelist, stack);
             }
             case BLACKLIST_ONLY -> {
-                return hasMatchItemStack(getConfig().blacklist, stack);
+                return !hasMatchItemStack(getConfig().blacklist, stack);
             }
             case WHITELIST_AND_DEFAULT -> {
                 if (!hasMatchItemStack(getConfig().whitelist, stack)) {
@@ -70,7 +74,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 }
             }
         }
-        return stack.isDamageable() || !stack.isStackable() || super.isAcceptableItem(stack);
+        return stack.isDamageable() || !stack.isStackable() || stack.isOf(Items.BOOK) || super.isAcceptableItem(stack);
     }
 
     public static boolean hasMatchItemStack(List<String> list, ItemStack stack) {
@@ -108,7 +112,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 }
             }
             Item item = Registries.ITEM.get(identifier);
-            if (item != null) {
+            if (item != Items.AIR) {
                 ItemStack itemStack = new ItemStack(item);
                 if (nbt != null) {
                     itemStack.setNbt(nbt);
@@ -117,6 +121,16 @@ public class SoulBoundEnchantment extends Enchantment {
             }
         }
         return false;
+    }
+
+    @Override
+    public boolean isAvailableForEnchantedBookOffer() {
+        return getConfig().allowEnchantedBookTrade && !getConfig().disableSurvivalObtaining;
+    }
+
+    @Override
+    public boolean isAvailableForRandomSelection() {
+        return !getConfig().disableSurvivalObtaining;
     }
 
     @Override
@@ -129,11 +143,10 @@ public class SoulBoundEnchantment extends Enchantment {
             for (int i = 0; i < oldPlayer.getInventory().size(); i++) {
                 ItemStack oldStack = oldPlayer.getInventory().getStack(i);
                 ItemStack newStack = newPlayer.getInventory().getStack(i);
-                int level = EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, oldStack);
-                if (level > 0 && !ItemStack.areEqual(oldStack, newStack)) {
-                    if (getConfig().maxDamagePercent != 0 && !oldPlayer.isCreative() && oldStack.isDamageable()) {
-                        oldStack.damage(oldPlayer.getRandom().nextInt(oldStack.getMaxDamage() * getConfig().maxDamagePercent / 100), oldPlayer.getRandom(), oldPlayer);
-                        if (oldStack.getDamage() >= oldStack.getMaxDamage()) {
+                if (hasSoulbound(oldStack) && !ItemStack.areEqual(oldStack, newStack)) {
+                    if (shouldDamage(oldPlayer, oldStack)) {
+                        damageRandomly(oldPlayer, oldStack);
+                        if (isBroken(oldStack)) {
                             if (getConfig().allowBreakItem) {
                                 continue;
                             } else {
@@ -152,17 +165,23 @@ public class SoulBoundEnchantment extends Enchantment {
             if (travelersBackpack) {
                 if (ComponentUtils.isWearingBackpack(oldPlayer)) {
                     ItemStack backpack = ComponentUtils.getWearingBackpack(oldPlayer);
-                    int level = EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, backpack);
-                    if (level > 0) {
+                    if (hasSoulbound(backpack)) {
                         if (ComponentUtils.isWearingBackpack(newPlayer)) {
                             newPlayer.getInventory().offerOrDrop(backpack);
                         } else {
                             ComponentUtils.getComponent(newPlayer).setWearable(backpack);
                             ComponentUtils.getComponent(newPlayer).setContents(backpack);
                             ComponentUtils.sync(newPlayer);
-                            ComponentUtils.syncToTracking(newPlayer);
                         }
                     }
+                }
+            }
+
+            if (beansBackpacks) {
+                BackData backData = BackData.get(oldPlayer);
+                ItemStack stack = backData.getStack();
+                if (hasSoulbound(stack)) {
+                    backData.copyTo(BackData.get(newPlayer));
                 }
             }
         }
@@ -174,10 +193,10 @@ public class SoulBoundEnchantment extends Enchantment {
                 if (!(entity instanceof ServerPlayerEntity player)) {
                     return rule;
                 }
-                if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
-                    if (getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable()) {
-                        stack.damage(player.getRandom().nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), player.getRandom(), player);
-                        if (stack.getDamage() >= stack.getMaxDamage()) {
+                if (hasSoulbound(stack)) {
+                    if (shouldDamage(player, stack)) {
+                        damageRandomly(player, stack);
+                        if (isBroken(stack)) {
                             if (getConfig().allowBreakItem) {
                                 return TrinketEnums.DropRule.DESTROY;
                             } else {
@@ -190,6 +209,23 @@ public class SoulBoundEnchantment extends Enchantment {
                 return rule;
             });
         }
+    }
+
+    private static boolean isBroken(ItemStack stack) {
+        return stack.getDamage() >= stack.getMaxDamage();
+    }
+
+    private static boolean shouldDamage(ServerPlayerEntity player, ItemStack stack) {
+        return getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable();
+    }
+
+    private static void damageRandomly(ServerPlayerEntity player, ItemStack stack) {
+        Random random = player.getRandom();
+        stack.damage(random.nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), random, player);
+    }
+
+    public static boolean hasSoulbound(ItemStack stack) {
+        return EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0;
     }
 
     private static ModConfig getConfig() {

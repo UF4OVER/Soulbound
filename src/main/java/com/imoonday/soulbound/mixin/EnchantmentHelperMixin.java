@@ -1,6 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
-import com.imoonday.soulbound.SoulBound;
+import com.imoonday.soulbound.SoulBoundEnchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.enchantment.EnchantmentLevelEntry;
 import net.minecraft.item.ItemStack;
@@ -17,7 +17,7 @@ public class EnchantmentHelperMixin {
     @Inject(method = "getPossibleEntries", at = @At("RETURN"), cancellable = true)
     private static void removeInvalidEntries(int power, ItemStack stack, boolean treasureAllowed, CallbackInfoReturnable<List<EnchantmentLevelEntry>> cir) {
         List<EnchantmentLevelEntry> list = cir.getReturnValue();
-        list.removeIf(entry -> entry.enchantment == SoulBound.SOUL_BOUND && !entry.enchantment.isAcceptableItem(stack));
+        list.removeIf(entry -> entry.enchantment instanceof SoulBoundEnchantment enchantment && !enchantment.isAcceptableItem(stack));
         cir.setReturnValue(list);
     }
 }
