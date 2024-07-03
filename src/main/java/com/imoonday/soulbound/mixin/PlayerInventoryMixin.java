@@ -1,7 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
-import com.imoonday.soulbound.SoulBound;
-import net.minecraft.enchantment.EnchantmentHelper;
+import com.imoonday.soulbound.SoulBoundEnchantment;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.entity.player.PlayerInventory;
 import net.minecraft.item.ItemStack;
@@ -53,6 +52,6 @@ public class PlayerInventoryMixin {
     @Unique
     public boolean shouldReserve(ItemStack stack) {
         if (stack.isEmpty()) return false;
-        return this.player.isAlive() || EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0;
+        return this.player.isAlive() || SoulBoundEnchantment.hasSoulbound(stack);
     }
 }
