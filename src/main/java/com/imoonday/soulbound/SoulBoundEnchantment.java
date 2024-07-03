@@ -1,5 +1,6 @@
 package com.imoonday.soulbound;
 
+import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import dev.emi.trinkets.api.TrinketEnums;
 import dev.emi.trinkets.api.event.TrinketDropCallback;
 import me.shedaniel.autoconfig.AutoConfig;
@@ -23,13 +24,14 @@ import java.util.List;
 public class SoulBoundEnchantment extends Enchantment {
 
     public static final String IGNORED_NBT = "*";
-    private static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
-//    private static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
+    public static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
+    public static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
 
     public SoulBoundEnchantment() {
         super(Enchantment.properties(ItemTags.DURABILITY_ENCHANTABLE, getConfig().weight, 1, Enchantment.constantCost(getConfig().minPower), Enchantment.constantCost(getConfig().maxPower), 4, EquipmentSlot.values()));
     }
 
+    @Override
     public boolean isTreasure() {
         return getConfig().isTreasure;
     }
@@ -83,20 +85,9 @@ public class SoulBoundEnchantment extends Enchantment {
             if (identifier == null) {
                 return false;
             }
-//            NbtCompound nbt = null;
-//            if (split.length > 1) {
-//                try {
-//                    nbt = StringNbtReader.parse("{" + split[1]);
-//                } catch (CommandSyntaxException ignored) {
-//
-//                }
-//            }
             Item item = Registries.ITEM.get(identifier);
             if (item != Items.AIR) {
                 ItemStack itemStack = new ItemStack(item);
-//                if (nbt != null) {
-//                    itemStack.applyComponentsFrom(nbt);
-//                }
                 return ItemStack.areItemsEqual(itemStack, stack);
             }
         }
@@ -191,7 +182,7 @@ public class SoulBoundEnchantment extends Enchantment {
         return getConfig().maxDamagePercent != 0 && !player.isCreative() && stack.isDamageable();
     }
 
-    private static void damageRandomly(ItemStack stack, ServerPlayerEntity player) {
+    private static void damageRandomly(ServerPlayerEntity player, ItemStack stack) {
         int maxDamage = stack.getMaxDamage();
         int damageRange = maxDamage * getConfig().maxDamagePercent / 100;
         if (damageRange <= 0) damageRange = maxDamage;

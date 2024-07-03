@@ -3,11 +3,11 @@ plugins {
     id 'maven-publish'
 }
 
-version = project.mod_version
+version = project.mod_version + "+" + project.minecraft_version
 group = project.maven_group
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = project.archives_base_name + "-" + project.platform
 }
 
 repositories {
@@ -48,16 +48,16 @@ dependencies {
     // Fabric API. This is technically optional, but you probably want it anyway.
     modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
-    modApi("me.shedaniel.cloth:cloth-config-fabric:14.0.126") {
+    modApi("me.shedaniel.cloth:cloth-config-fabric:${project.cloth_config_version}") {
         exclude(group: "net.fabricmc.fabric-api")
     }
 
-    modApi "com.terraformersmc:modmenu:10.0.0-beta.1"
+    modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation "dev.emi:trinkets:3.9.0"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:6.0.0"
-    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:6.0.0"
-//    modImplementation "maven.modrinth:travelersbackpack:RUbUcNV0"
+    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
+    modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
+    modImplementation "maven.modrinth:travelersbackpack:${project.travelersbackpack_version}"
 }
 
 processResources {
