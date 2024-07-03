@@ -29,9 +29,9 @@ import java.util.List;
 public class SoulBoundEnchantment extends Enchantment {
 
     public static final String IGNORED_NBT = "*";
-    private static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
-    private static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
-    private static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
+    public static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
+    public static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
+    public static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
 
     public SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentTarget.BREAKABLE, EquipmentSlot.values());
@@ -62,7 +62,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 return hasMatchItemStack(getConfig().whitelist, stack);
             }
             case BLACKLIST_ONLY -> {
-                return hasMatchItemStack(getConfig().blacklist, stack);
+                return !hasMatchItemStack(getConfig().blacklist, stack);
             }
             case WHITELIST_AND_DEFAULT -> {
                 if (!hasMatchItemStack(getConfig().whitelist, stack)) {
@@ -75,7 +75,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 }
             }
         }
-        return stack.isDamageable() || !stack.isStackable() || super.isAcceptableItem(stack);
+        return stack.isDamageable() || !stack.isStackable() || stack.isOf(Items.BOOK) || super.isAcceptableItem(stack);
     }
 
     public static boolean hasMatchItemStack(List<String> list, ItemStack stack) {
@@ -125,6 +125,16 @@ public class SoulBoundEnchantment extends Enchantment {
     }
 
     @Override
+    public boolean isAvailableForEnchantedBookOffer() {
+        return getConfig().allowEnchantedBookTrade && !getConfig().disableSurvivalObtaining;
+    }
+
+    @Override
+    public boolean isAvailableForRandomSelection() {
+        return !getConfig().disableSurvivalObtaining;
+    }
+
+    @Override
     protected boolean canAccept(Enchantment other) {
         return (!(other instanceof VanishingCurseEnchantment) || !getConfig().conflictWithVanishingCurse) && super.canAccept(other);
     }
@@ -134,8 +144,7 @@ public class SoulBoundEnchantment extends Enchantment {
             for (int i = 0; i < oldPlayer.getInventory().size(); i++) {
                 ItemStack oldStack = oldPlayer.getInventory().getStack(i);
                 ItemStack newStack = newPlayer.getInventory().getStack(i);
-                int level = EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, oldStack);
-                if (level > 0 && !ItemStack.areEqual(oldStack, newStack)) {
+                if (hasSoulbound(oldStack) && !ItemStack.areEqual(oldStack, newStack)) {
                     if (shouldDamage(oldPlayer, oldStack)) {
                         damageRandomly(oldPlayer, oldStack);
                         if (isBroken(oldStack)) {
@@ -157,8 +166,7 @@ public class SoulBoundEnchantment extends Enchantment {
             if (travelersBackpack) {
                 if (ComponentUtils.isWearingBackpack(oldPlayer)) {
                     ItemStack backpack = ComponentUtils.getWearingBackpack(oldPlayer);
-                    int level = EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, backpack);
-                    if (level > 0) {
+                    if (hasSoulbound(backpack)) {
                         if (ComponentUtils.isWearingBackpack(newPlayer)) {
                             newPlayer.getInventory().offerOrDrop(backpack);
                         } else {
@@ -173,7 +181,7 @@ public class SoulBoundEnchantment extends Enchantment {
             if (beansBackpacks) {
                 BackData backData = BackData.get(oldPlayer);
                 ItemStack stack = backData.getStack();
-                if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
+                if (hasSoulbound(stack)) {
                     backData.copyTo(BackData.get(newPlayer));
                 }
             }
@@ -186,7 +194,7 @@ public class SoulBoundEnchantment extends Enchantment {
                 if (!(entity instanceof ServerPlayerEntity player)) {
                     return rule;
                 }
-                if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
+                if (hasSoulbound(stack)) {
                     if (shouldDamage(player, stack)) {
                         damageRandomly(player, stack);
                         if (isBroken(stack)) {
@@ -209,7 +217,7 @@ public class SoulBoundEnchantment extends Enchantment {
             FabricCompatHelper.OnDeathCallback.EVENT.register(context -> {
                 if (context.getPlayer() instanceof ServerPlayerEntity) {
                     ItemStack stack = context.getBackStack();
-                    if (EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0) {
+                    if (hasSoulbound(stack)) {
                         context.cancel();
                     }
                 }
@@ -228,6 +236,10 @@ public class SoulBoundEnchantment extends Enchantment {
     private static void damageRandomly(ServerPlayerEntity player, ItemStack stack) {
         Random random = player.getRandom();
         stack.damage(random.nextInt(stack.getMaxDamage() * getConfig().maxDamagePercent / 100), random, player);
+    }
+
+    public static boolean hasSoulbound(ItemStack stack) {
+        return EnchantmentHelper.getLevel(SoulBound.SOUL_BOUND, stack) > 0;
     }
 
     private static ModConfig getConfig() {
