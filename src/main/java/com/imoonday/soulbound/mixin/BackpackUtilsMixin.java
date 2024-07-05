@@ -1,6 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
-import com.imoonday.soulbound.SoulBoundEnchantment;
+import com.imoonday.soulbound.SoulBound;
 import com.tiviacz.travelersbackpack.util.BackpackUtils;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
@@ -15,7 +15,7 @@ public class BackpackUtilsMixin {
 
     @Inject(method = "onPlayerDrops", at = @At("HEAD"), cancellable = true)
     private static void handleOnPlayerDrops(World world, PlayerEntity player, ItemStack stack, CallbackInfoReturnable<Boolean> cir) {
-        if (SoulBoundEnchantment.hasSoulbound(stack)) {
+        if (SoulBound.hasSoulbound(stack)) {
             cir.setReturnValue(false);
         }
     }

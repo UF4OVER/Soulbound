@@ -54,7 +54,7 @@ dependencies {
 
     modApi "com.terraformersmc:modmenu:${project.modmenu_version}"
 
-    modImplementation "dev.emi:trinkets:${project.trinkets_version}"
+    modCompileOnly "dev.emi:trinkets:${project.trinkets_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
     modImplementation "maven.modrinth:travelersbackpack:${project.travelersbackpack_version}"
@@ -118,4 +118,8 @@ publishing {
         // The repositories here will be used for publishing your artifact, not for
         // retrieving dependencies.
     }
+}
+
+fabricApi {
+    configureDataGeneration()
 }

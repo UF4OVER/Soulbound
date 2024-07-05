@@ -19,6 +19,9 @@
     ],
     "modmenu": [
       "com.imoonday.soulbound.ModMenuIntegration"
+    ],
+    "fabric-datagen": [
+      "com.imoonday.soulbound.DataGen"
     ]
   },
   "mixins": [
