@@ -54,7 +54,6 @@ dependencies {
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"
     modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"
     modImplementation "maven.modrinth:travelersbackpack:${project.travelersbackpack_version}"
-    modImplementation "maven.modrinth:beans-backpacks:${project.beans_backpacks_version}"
 }
 
 processResources {

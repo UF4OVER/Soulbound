@@ -6,7 +6,6 @@
   "mixins": [
     "BackpackUtilsMixin",
     "EnchantmentHelperMixin",
-    "LivingEntityDeathMixin",
     "PlayerInventoryMixin"
   ],
   "injectors": {

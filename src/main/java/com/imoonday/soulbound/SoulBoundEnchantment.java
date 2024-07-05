@@ -1,6 +1,5 @@
 package com.imoonday.soulbound;
 
-import com.beansgalaxy.backpacks.core.BackData;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tiviacz.travelersbackpack.component.ComponentUtils;
 import dev.emi.trinkets.api.TrinketEnums;
@@ -30,7 +29,6 @@ public class SoulBoundEnchantment extends Enchantment {
     public static final String IGNORED_NBT = "*";
     public static boolean curios = FabricLoader.getInstance().isModLoaded("trinkets");
     public static boolean travelersBackpack = FabricLoader.getInstance().isModLoaded("travelersbackpack");
-    public static boolean beansBackpacks = FabricLoader.getInstance().isModLoaded("beansbackpacks");
 
     public SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentTarget.BREAKABLE, EquipmentSlot.values());
@@ -174,14 +172,6 @@ public class SoulBoundEnchantment extends Enchantment {
                             ComponentUtils.sync(newPlayer);
                         }
                     }
-                }
-            }
-
-            if (beansBackpacks) {
-                BackData backData = BackData.get(oldPlayer);
-                ItemStack stack = backData.getStack();
-                if (hasSoulbound(stack)) {
-                    backData.copyTo(BackData.get(newPlayer));
                 }
             }
         }
