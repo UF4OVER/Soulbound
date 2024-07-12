@@ -23,7 +23,9 @@ public class InventoryMixin {
     @Shadow
     @Final
     public Player player;
-    @Shadow @Final private List<NonNullList<ItemStack>> compartments;
+    @Shadow
+    @Final
+    private List<NonNullList<ItemStack>> compartments;
     @Unique
     private final Map<int[], ItemStack> soulbound$reservedItems = new HashMap<>();
 

@@ -30,10 +30,20 @@ public class Config {
             .comment("是否是宝物附魔（即不会出现在附魔台中）")
             .define("isTreasure", true);
 
+    private static final ForgeConfigSpec.BooleanValue ALLOW_ENCHANTED_BOOK_TRADE = BUILDER
+            .comment("Whether to allow librarians to sell this enchantment")
+            .comment("是否允许图书管理员出售此附魔")
+            .define("allowEnchantedBookTrade", true);
+
     private static final ForgeConfigSpec.BooleanValue ALLOW_BREAK_ITEM = BUILDER
             .comment("Whether to allow the item to disappear after being damaged")
             .comment("是否允许物品在损坏后消失")
             .define("allowBreakItem", false);
+
+    private static final ForgeConfigSpec.BooleanValue DISABLE_SURVIVAL_OBTAINING = BUILDER
+            .comment("Whether to disable obtaining in survival")
+            .comment("是否禁用生存模式获取途径")
+            .define("disableSurvivalObtaining", false);
 
     private static final ForgeConfigSpec.IntValue MAX_DAMAGE_PERCENT = BUILDER
             .comment("Max percentage of damage")
@@ -72,7 +82,9 @@ public class Config {
     static final ForgeConfigSpec SPEC = BUILDER.build();
 
     public static boolean conflictWithVanishingCurse;
+    public static boolean allowEnchantedBookTrade;
     public static boolean isTreasure;
+    public static boolean disableSurvivalObtaining;
     public static boolean allowBreakItem;
     public static int maxDamagePercent;
     public static int minPower;
@@ -85,7 +97,9 @@ public class Config {
     static void onLoad(final ModConfigEvent event) {
         conflictWithVanishingCurse = CONFLICT_WITH_VANISHING_CURSE.get();
         isTreasure = IS_TREASURE.get();
+        allowEnchantedBookTrade = ALLOW_ENCHANTED_BOOK_TRADE.get();
         allowBreakItem = ALLOW_BREAK_ITEM.get();
+        disableSurvivalObtaining = DISABLE_SURVIVAL_OBTAINING.get();
         maxDamagePercent = MAX_DAMAGE_PERCENT.get();
         minPower = MIN_POWER.get();
         powerRange = POWER_RANGE.get();
