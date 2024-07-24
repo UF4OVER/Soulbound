@@ -17,11 +17,11 @@ plugins {
 
 apply plugin: 'org.spongepowered.mixin'
 
-group = mod_version
-version = mod_group_id
+group = mod_group_id
+version = mod_version + "+" + minecraft_version
 
 base {
-    archivesName = mod_name + "-Forge"
+    archivesName = mod_id + "-" + platform
 }
 
 java {
@@ -186,10 +186,10 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
-    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.7+1.20.1")
-    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.4.7+1.20.1:api")
-    implementation fg.deobf("maven.modrinth:travelersbackpack:1.20.1-9.1.7")
-    implementation fg.deobf("maven.modrinth:beans-backpacks:20.1-0.25-v2")
+    runtimeOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+1.20.1")
+    compileOnly fg.deobf("top.theillusivec4.curios:curios-forge:5.9.1+1.20.1:api")
+    implementation fg.deobf("maven.modrinth:travelersbackpack:FDqFhZfz")
+    implementation fg.deobf("maven.modrinth:beans-backpacks:r9Lq0Zp7")
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
