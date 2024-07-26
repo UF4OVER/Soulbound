@@ -1,7 +1,5 @@
 package com.imoonday.soulbound;
 
-import com.beansgalaxy.backpacks.data.BackData;
-import com.beansgalaxy.backpacks.platform.ForgeCompatHelper;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.tiviacz.travelersbackpack.capability.CapabilityUtils;
 import com.tiviacz.travelersbackpack.capability.ITravelersBackpack;
@@ -35,7 +33,7 @@ public class SoulBoundEnchantment extends Enchantment {
     public static final String IGNORED_NBT = "*";
     public static boolean curios = ModList.get().isLoaded("curios");
     public static boolean travelersBackpack = ModList.get().isLoaded("travelersbackpack");
-    public static boolean beansBackpacks = ModList.get().isLoaded("beansbackpacks");
+//    public static boolean beansBackpacks = ModList.get().isLoaded("beansbackpacks");
 
     protected SoulBoundEnchantment() {
         super(Rarity.RARE, EnchantmentCategory.BREAKABLE, EquipmentSlot.values());
@@ -169,6 +167,7 @@ public class SoulBoundEnchantment extends Enchantment {
             }
 
             if (travelersBackpack) {
+                oldPlayer.reviveCaps();
                 if (CapabilityUtils.isWearingBackpack(oldPlayer)) {
                     ItemStack backpack = CapabilityUtils.getWearingBackpack(oldPlayer);
                     if (hasSoulbound(backpack)) {
@@ -194,15 +193,17 @@ public class SoulBoundEnchantment extends Enchantment {
                         }
                     }
                 }
+                oldPlayer.invalidateCaps();
             }
 
-            if (beansBackpacks) {
-                BackData backData = BackData.get(oldPlayer);
-                ItemStack stack = backData.getStack();
-                if (hasSoulbound(stack)) {
-                    backData.copyTo(BackData.get(newPlayer));
-                }
-            }
+            //Here is not working properly
+//            if (beansBackpacks) {
+//                BackData backData = BackData.get(oldPlayer);
+//                ItemStack stack = backData.getStack();
+//                if (hasSoulbound(stack)) {
+//                    backData.copyTo(BackData.get(newPlayer));
+//                }
+//            }
         }
     }
 
@@ -233,18 +234,18 @@ public class SoulBoundEnchantment extends Enchantment {
         }
     }
 
-    public static void registerBeansBackpacksDropCallback() {
-        if (beansBackpacks) {
-            MinecraftForge.EVENT_BUS.<ForgeCompatHelper.OnDeath>addListener(event -> {
-                if (event.getEntity() instanceof ServerPlayer) {
-                    ItemStack stack = event.getBackStack();
-                    if (hasSoulbound(stack)) {
-                        event.setCanceled(true);
-                    }
-                }
-            });
-        }
-    }
+//    public static void registerBeansBackpacksDropCallback() {
+//        if (beansBackpacks) {
+//            MinecraftForge.EVENT_BUS.<ForgeCompatHelper.OnDeath>addListener(event -> {
+//                if (event.getEntity() instanceof ServerPlayer) {
+//                    ItemStack stack = event.getBackStack();
+//                    if (hasSoulbound(stack)) {
+//                        event.setCanceled(true);
+//                    }
+//                }
+//            });
+//        }
+//    }
 
     private static boolean isBroken(ItemStack stack) {
         return stack.getDamageValue() >= stack.getMaxDamage();

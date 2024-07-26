@@ -25,7 +25,7 @@ public class Soulbound {
         ENCHANTMENTS.register(modEventBus);
         MinecraftForge.EVENT_BUS.register(this);
         SoulBoundEnchantment.addCuriosDropListener();
-        SoulBoundEnchantment.registerBeansBackpacksDropCallback();
+//        SoulBoundEnchantment.registerBeansBackpacksDropCallback();
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.SPEC);
     }
 

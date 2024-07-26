@@ -1,7 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
 import com.imoonday.soulbound.SoulBoundEnchantment;
-import com.imoonday.soulbound.Soulbound;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;

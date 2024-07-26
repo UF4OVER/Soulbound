@@ -1,7 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
 import com.imoonday.soulbound.SoulBoundEnchantment;
-import com.imoonday.soulbound.Soulbound;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.EnchantmentInstance;
