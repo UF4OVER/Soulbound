@@ -1,6 +1,6 @@
 package com.imoonday.soulbound.mixin;
 
-import com.imoonday.soulbound.Soulbound;
+import com.imoonday.soulbound.SoulBoundEnchantment;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -23,7 +23,9 @@ public class InventoryMixin {
     @Shadow
     @Final
     public Player player;
-    @Shadow @Final private List<NonNullList<ItemStack>> compartments;
+    @Shadow
+    @Final
+    private List<NonNullList<ItemStack>> compartments;
     @Unique
     private final Map<int[], ItemStack> soulbound$reservedItems = new HashMap<>();
 
@@ -50,6 +52,6 @@ public class InventoryMixin {
     @Unique
     public boolean soulbound$shouldReserve(ItemStack stack) {
         if (stack.isEmpty()) return false;
-        return this.player.isAlive() || stack.getEnchantmentLevel(Soulbound.SOUL_BOUND_ENCHANTMENT.get()) > 0;
+        return this.player.isAlive() || SoulBoundEnchantment.hasSoulbound(stack);
     }
 }
