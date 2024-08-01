@@ -8,6 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.registry.tag.ItemTags;
+import net.minecraft.util.Identifier;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -27,9 +28,15 @@ public class DataGen implements DataGeneratorEntrypoint {
 
         @Override
         protected void configure(RegistryWrapper.WrapperLookup wrapperLookup) {
-            this.getOrCreateTagBuilder(SoulBound.SOULBOUND_ENCHANTABLE)
-                    .addOptionalTag(ItemTags.DURABILITY_ENCHANTABLE)
-                    .add(Registries.ITEM.stream().filter(item -> !item.getDefaultStack().isStackable()).toArray(Item[]::new));
+            FabricTagProvider<Item>.FabricTagBuilder builder = this.getOrCreateTagBuilder(SoulBound.SOULBOUND_ENCHANTABLE);
+            builder.addOptionalTag(ItemTags.DURABILITY_ENCHANTABLE);
+            Registries.ITEM.stream().filter(item -> !item.getDefaultStack().isStackable()).forEach(item -> {
+                if (Registries.ITEM.getId(item).getNamespace().equals(Identifier.DEFAULT_NAMESPACE)) {
+                    builder.add(item);
+                } else {
+                    Registries.ITEM.getKey(item).ifPresent(builder::addOptional);
+                }
+            });
         }
     }
 }

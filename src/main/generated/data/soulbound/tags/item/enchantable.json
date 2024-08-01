@@ -1,10 +1,6 @@
 {
   "values": [
-    {
-      "id": "#minecraft:enchantable/durability",
-      "required": false
-    },
-    "minecraft:air",
+    "#minecraft:enchantable/durability",
     "minecraft:shulker_box",
     "minecraft:white_shulker_box",
     "minecraft:orange_shulker_box",
@@ -188,49 +184,181 @@
     "minecraft:guster_banner_pattern",
     "minecraft:goat_horn",
     "minecraft:brush",
-    "travelersbackpack:standard",
-    "travelersbackpack:netherite",
-    "travelersbackpack:diamond",
-    "travelersbackpack:gold",
-    "travelersbackpack:emerald",
-    "travelersbackpack:iron",
-    "travelersbackpack:lapis",
-    "travelersbackpack:redstone",
-    "travelersbackpack:coal",
-    "travelersbackpack:quartz",
-    "travelersbackpack:bookshelf",
-    "travelersbackpack:end",
-    "travelersbackpack:nether",
-    "travelersbackpack:sandstone",
-    "travelersbackpack:snow",
-    "travelersbackpack:sponge",
-    "travelersbackpack:cake",
-    "travelersbackpack:cactus",
-    "travelersbackpack:hay",
-    "travelersbackpack:melon",
-    "travelersbackpack:pumpkin",
-    "travelersbackpack:creeper",
-    "travelersbackpack:dragon",
-    "travelersbackpack:enderman",
-    "travelersbackpack:blaze",
-    "travelersbackpack:ghast",
-    "travelersbackpack:magma_cube",
-    "travelersbackpack:skeleton",
-    "travelersbackpack:spider",
-    "travelersbackpack:wither",
-    "travelersbackpack:bat",
-    "travelersbackpack:bee",
-    "travelersbackpack:wolf",
-    "travelersbackpack:fox",
-    "travelersbackpack:ocelot",
-    "travelersbackpack:horse",
-    "travelersbackpack:cow",
-    "travelersbackpack:pig",
-    "travelersbackpack:sheep",
-    "travelersbackpack:chicken",
-    "travelersbackpack:squid",
-    "travelersbackpack:villager",
-    "travelersbackpack:iron_golem",
-    "travelersbackpack:hose"
+    {
+      "id": "travelersbackpack:standard",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:netherite",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:diamond",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:gold",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:emerald",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:iron",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:lapis",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:redstone",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:coal",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:quartz",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:bookshelf",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:end",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:nether",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:sandstone",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:snow",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:sponge",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:cake",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:cactus",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:hay",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:melon",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:pumpkin",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:creeper",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:dragon",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:enderman",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:blaze",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:ghast",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:magma_cube",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:skeleton",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:spider",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:wither",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:bat",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:bee",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:wolf",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:fox",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:ocelot",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:horse",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:cow",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:pig",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:sheep",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:chicken",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:squid",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:villager",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:iron_golem",
+      "required": false
+    },
+    {
+      "id": "travelersbackpack:hose",
+      "required": false
+    }
   ]
 }
