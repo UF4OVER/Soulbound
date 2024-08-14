@@ -1,0 +1,30 @@
+modLoader = "javafml"
+loaderVersion = "[47,)"
+issueTrackerURL = "https://github.com/iMoonDay/Soulbound/issues"
+license = "MIT"
+
+[[mods]]
+modId = "soulbound"
+version = "${version}"
+displayName = "Soulbound"
+authors = "iMoonDay"
+description = '''
+Enchantment that prevents items from being dropped when the player dies
+'''
+logoFile = "icon.png"
+displayURL = "https://modrinth.com/mod/soulbound-enchantment"
+
+[[dependencies.soulbound]]
+modId = "forge"
+mandatory = true
+versionRange = "[47,)"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.soulbound]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.20,1.21)"
+ordering = "NONE"
+side = "BOTH"
+

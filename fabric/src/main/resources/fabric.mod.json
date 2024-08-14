@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "id": "soulbound",
+  "version": "${version}",
+  "name": "Soulbound",
+  "description": "Enchantment that prevents items from being dropped when the player dies",
+  "authors": [
+    "iMoonDay"
+  ],
+  "contact": {
+    "homepage": "https://modrinth.com/mod/soulbound-enchantment",
+    "sources": "https://github.com/iMoonDay/Soulbound",
+    "issues": "https://github.com/iMoonDay/Soulbound/issues"
+  },
+  "license": "MIT",
+  "icon": "icon.png",
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "com.imoonday.soulbound.fabric.SoulboundFabric"
+    ],
+    "modmenu": [
+      "com.imoonday.soulbound.fabric.ModMenuIntegration"
+    ]
+  },
+  "mixins": [
+    "soulbound.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.15",
+    "minecraft": "~1.20",
+    "java": ">=17",
+    "fabric-api": "*",
+    "cloth-config": "*"
+  }
+}
