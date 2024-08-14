@@ -1,0 +1,8 @@
+{
+  "enchantment.soulbound.soulbound": "灵魂绑定",
+  "enchantment.soulbound.soulbound.desc": "在死亡时自动保留该物品并随机损伤",
+  "soulbound.configuration.allowBreakItem": "允许损毁物品",
+  "soulbound.configuration.maxDamagePercent": "最大损坏百分比",
+  "soulbound.configuration.section.soulbound.common.toml.title": "灵魂绑定",
+  "soulbound.configuration.title": "灵魂绑定"
+}
