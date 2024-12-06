@@ -2,7 +2,6 @@ package com.imoonday.soulbound;
 
 import com.mojang.logging.LogUtils;
 import com.tiviacz.travelersbackpack.capability.AttachmentUtils;
-import com.tiviacz.travelersbackpack.capability.ITravelersBackpack;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
@@ -35,6 +34,7 @@ import java.util.Optional;
 
 @Mod(Soulbound.MODID)
 public class Soulbound {
+
     public static final String MODID = "soulbound";
     private static final Logger LOGGER = LogUtils.getLogger();
     public static final ResourceKey<Enchantment> SOULBOUND = ResourceKey.create(Registries.ENCHANTMENT, ResourceLocation.fromNamespaceAndPath(MODID, MODID));
@@ -84,26 +84,10 @@ public class Soulbound {
                 if (AttachmentUtils.isWearingBackpack(oldPlayer)) {
                     ItemStack backpack = AttachmentUtils.getWearingBackpack(oldPlayer);
                     if (hasSoulbound(level, backpack)) {
-                        Optional<ITravelersBackpack> optional = AttachmentUtils.getAttachment(newPlayer);
-                        boolean synchronised = false;
-                        if (optional.isPresent()) {
-                            ITravelersBackpack iTravelersBackpack = optional.get();
-                            ItemStack wearable = iTravelersBackpack.getWearable();
-                            ItemStack content = iTravelersBackpack.getContainer().getItemStack();
-                            boolean areNull = wearable == null && content == null;
-                            boolean areEmpty = wearable != null && content != null && wearable.isEmpty() && content.isEmpty();
-                            boolean areEqual = backpack.equals(wearable) && backpack.equals(content);
-                            if (areNull || areEmpty || areEqual) {
-                                iTravelersBackpack.setWearable(backpack);
-                                iTravelersBackpack.setContents(backpack);
-                                iTravelersBackpack.synchronise();
-                                iTravelersBackpack.synchroniseToOthers(newPlayer);
-                                synchronised = true;
-                            }
-                        }
-                        if (!synchronised) {
-                            newPlayer.getInventory().placeItemBackInInventory(backpack);
-                        }
+                        AttachmentUtils.getAttachment(newPlayer).ifPresentOrElse(iTravelersBackpack -> {
+                            iTravelersBackpack.updateBackpack(backpack);
+                            iTravelersBackpack.synchronise();
+                        }, () -> newPlayer.getInventory().placeItemBackInInventory(backpack));
                     }
                 }
             }
