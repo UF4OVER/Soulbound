@@ -359,6 +359,26 @@
     {
       "id": "travelersbackpack:hose",
       "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:backpack",
+      "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:iron_backpack",
+      "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:gold_backpack",
+      "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:diamond_backpack",
+      "required": false
+    },
+    {
+      "id": "sophisticatedbackpacks:netherite_backpack",
+      "required": false
     }
   ]
 }
